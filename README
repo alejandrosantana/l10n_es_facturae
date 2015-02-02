@@ -1,0 +1,5 @@
+Módulo l10n_es_facturae de OpenERP
+==================================
+
+- Se parte de https://github.com/Pexego/l10n-spain-facturae60_61/tree/6.0/l10n_es_facturae y https://github.com/TeconSoluciones/l10n_es_facturae/tree/master/l10n_es_facturae
+- Adaptación de Facturae 3.1 a 3.2
