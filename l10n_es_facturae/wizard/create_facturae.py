@@ -25,8 +25,15 @@ import base64
 import netsvc
 from tools.translate import _
 from osv import osv, fields
+import pooler
+import wizard
+import base64
+import subprocess
+import os
+import sys
 
 logger = netsvc.Logger()
+
 
 def conv_ascii(text):
     """Convierte vocales accentuadas, ñ y ç a sus caracteres equivalentes ASCII"""
