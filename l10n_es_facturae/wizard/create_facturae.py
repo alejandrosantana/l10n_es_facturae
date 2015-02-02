@@ -76,7 +76,7 @@ class create_facturae(osv.osv_memory):
         def _format_xml():
             #formato y definicion del fichero xml
             texto = '﻿<?xml version="1.0" encoding="UTF-8"?>'
-            texto = '<fe:Facturae xmlns:fe="http://www.facturae.es/Facturae/2007/v3.1/Facturae" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
+            texto = '<fe:Facturae xmlns:fe="http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
             return texto
 
         def _persona(vat):
@@ -111,7 +111,7 @@ class create_facturae(osv.osv_memory):
 
             company_partner_obj = invoice.company_id.partner_id
 
-            schemaversion = '3.1'
+            schemaversion = '3.2'
             modality = 'I'
 
             if not invoice.number:
@@ -416,15 +416,15 @@ class create_facturae(osv.osv_memory):
                 texto += '<ItemDescription>' + line.name + '</ItemDescription>'
                 texto += '<Quantity>' + str(line.quantity) + '</Quantity>'
                 texto += '<UnitPriceWithoutTax>' + str('%.6f' % line.price_unit) + '</UnitPriceWithoutTax>'
-                texto += '<TotalCost>' + str('%.2f' % (line.quantity * line.price_unit)) + '</TotalCost>'
+                texto += '<TotalCost>' + str('%.6f' % (line.quantity * line.price_unit)) + '</TotalCost>'
                 texto += '<DiscountsAndRebates>'
                 texto += '<Discount>'
                 texto += '<DiscountReason>Descuento</DiscountReason>'
                 texto += '<DiscountRate>' + str('%.4f' % line.discount) + '</DiscountRate>'
-                texto += '<DiscountAmount>' + str('%.2f' % ( (line.price_unit*line.quantity) - line.price_subtotal)) + '</DiscountAmount>'
+                texto += '<DiscountAmount>' + str('%.6f' % ( (line.price_unit*line.quantity) - line.price_subtotal)) + '</DiscountAmount>'
                 texto += '</Discount>'
                 texto += '</DiscountsAndRebates>'
-                texto += '<GrossAmount>' + str('%.2f' % line.price_subtotal) + '</GrossAmount>'
+                texto += '<GrossAmount>' + str('%.6f' % line.price_subtotal) + '</GrossAmount>'
                 texto += '<TaxesWithheld>'
                 texto += '<Tax>'
                 texto += '<TaxTypeCode>01</TaxTypeCode>'
