@@ -479,6 +479,55 @@ class create_facturae(osv.osv_memory):
 
         def _end_document():
             return '</fe:Facturae>'
+    
+        def _run_java_sign(command):
+            print "_run_java_sign"
+            print "command", command
+            #call = [['java','-jar','temp.jar']]
+            res = subprocess.call(command,stdout=None,stderr=None)
+            print "res"
+            if res > 0 :
+                print "Warning - result was %d" % res
+            return res
+    
+        def _sign_document(xml_facturae,file_name,invoice):
+            print "_sign_document"
+            path = os.path.realpath(os.path.dirname(__file__))
+            path += '/../java/'
+            # Almacenamos nuestra cadena XML en un fichero y creamos los ficheros auxiliares.
+            print "aqui1"
+            file_name_unsigned = path + 'unsigned_' + file_name
+            file_name_signed = path + file_name
+            file_unsigned = open(file_name_unsigned,"w+")
+            file_unsigned.write(xml_facturae)
+            file_unsigned.close()      
+            file_signed = open(file_name_signed,"w+")
+            print "aquí2"
+
+            # Extraemos los datos del certificado para la firma electrónica.
+            certificate = invoice.company_id.facturae_cert
+            cert_passwd = invoice.company_id.facturae_cert_password
+            cert_path = path + 'certificado.pfx'
+            cert_file = open(cert_path,'wb')
+            cert_file.write(certificate.decode('base64'))
+            cert_file.close()
+            print "aqui3"
+
+            # Componemos la llamada al firmador.
+            call = ['java','-jar',path + 'FacturaeJ.jar','0']
+            call += [file_name_unsigned,file_name_signed]
+            call += ['facturae31']
+            call += [cert_path,cert_passwd]
+            res = _run_java_sign(call)
+
+            # Cerramos y eliminamos ficheros temporales.           
+            file_content = file_signed.read()
+            file_signed.close()
+            os.remove(file_name_unsigned)
+            os.remove(file_name_signed)
+            os.remove(cert_path)
+
+            return file_content
 
         xml_facturae = ''
         log = Log()
@@ -497,6 +546,10 @@ class create_facturae(osv.osv_memory):
             xml_facturae += _invoices_facturae()
             xml_facturae += _end_document()
             xml_facturae = conv_ascii(xml_facturae)
+            # I.AFG
+            file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
+            signed_invoice = _sign_document(xml_facturae,file_name,invoice)
+            #F.AFG
         except Log:
             obj.write({'note': log(),
                        'state': 'second'})
