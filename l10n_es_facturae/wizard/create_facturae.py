@@ -548,7 +548,7 @@ class create_facturae(osv.osv_memory):
                        'state': 'second'})
             return True
         else:
-            file = base64.encodestring(xml_facturae)
+            file = base64.encodestring(signed_invoice)
             fname = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
             self.pool.get('ir.attachment').create(cr, uid, {
                 'name': '%s %s' % (_('FacturaE'), invoice.number),
