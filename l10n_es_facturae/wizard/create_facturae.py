@@ -481,28 +481,22 @@ class create_facturae(osv.osv_memory):
             return '</fe:Facturae>'
     
         def _run_java_sign(command):
-            print "_run_java_sign"
-            print "command", command
             #call = [['java','-jar','temp.jar']]
             res = subprocess.call(command,stdout=None,stderr=None)
-            print "res"
             if res > 0 :
                 print "Warning - result was %d" % res
             return res
     
         def _sign_document(xml_facturae,file_name,invoice):
-            print "_sign_document"
             path = os.path.realpath(os.path.dirname(__file__))
             path += '/../java/'
             # Almacenamos nuestra cadena XML en un fichero y creamos los ficheros auxiliares.
-            print "aqui1"
             file_name_unsigned = path + 'unsigned_' + file_name
             file_name_signed = path + file_name
             file_unsigned = open(file_name_unsigned,"w+")
             file_unsigned.write(xml_facturae)
             file_unsigned.close()      
             file_signed = open(file_name_signed,"w+")
-            print "aquí2"
 
             # Extraemos los datos del certificado para la firma electrónica.
             certificate = invoice.company_id.facturae_cert
@@ -511,7 +505,6 @@ class create_facturae(osv.osv_memory):
             cert_file = open(cert_path,'wb')
             cert_file.write(certificate.decode('base64'))
             cert_file.close()
-            print "aqui3"
 
             # Componemos la llamada al firmador.
             call = ['java','-jar',path + 'FacturaeJ.jar','0']
