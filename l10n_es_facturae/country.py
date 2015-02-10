@@ -21,13 +21,17 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import fields, orm
 
 
-class Country(osv.osv):
+class Country(orm.Model):
     _inherit = 'res.country'
     _columns = {
-        'code_3166': fields.char('Country Code', size=3,help='The ISO 3166 country code in three chars.', required=True),
+        'code_3166': fields.char(
+            'Country Code',
+            size=3,
+            help='The ISO 3166 country code in three chars.',
+            required=True),
     }
 
     def _auto_init(self, cr, context=None):
@@ -46,7 +50,6 @@ class Country(osv.osv):
 
         return res
 
-Country()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

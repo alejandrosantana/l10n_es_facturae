@@ -20,15 +20,12 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osv import osv,fields
+from osv import orm, fields
 
-class res_company(osv.osv):
+class ResCompany(orm.Model):
   _name = 'res.company'
   _inherit = 'res.company'
-  
   _columns = {
               'facturae_cert':fields.binary(string='Certificado firma electrónica',filters='*.pfx'),
               'facturae_cert_password':fields.char('Contraseña certificado',size=64),
               }
-
-res_company()

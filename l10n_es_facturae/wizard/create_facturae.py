@@ -24,9 +24,8 @@
 import base64
 import netsvc
 from tools.translate import _
-from osv import osv, fields
+from osv import orm, fields
 import pooler
-import wizard
 import base64
 import subprocess
 import os
@@ -56,17 +55,14 @@ class Log(Exception):
     def __str__(self):
         return self.content
 
-class create_facturae(osv.osv_memory):
-
+class CreateFacturae(orm.TransientModel):
     _name = "create.facturae"
-
     _columns = {
         'facturae' : fields.binary('Factura-E file', readonly=True),
         'facturae_fname': fields.char("File name", size=64),
         'note': fields.text('Log'),
         'state': fields.selection([('first', 'First'),('second','Second')], 'State', readonly=True)
     }
-
     _defaults = {
         'state': 'first'
     }
@@ -565,5 +561,3 @@ class create_facturae(osv.osv_memory):
                        'state': 'second'})
             return True
 
-
-create_facturae()

@@ -21,10 +21,10 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import orm
 import netsvc
 
-class account_invoce(osv.osv):
+class AccountInvoce(orm.Model):
     _name = 'account.invoice'
     _inherit = 'account.invoice'
     #demomento deshabilitado (graba cuando se genero)
@@ -36,7 +36,5 @@ class account_invoce(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'account.invoce', id, 'done', cr)
         return True
-
-account_invoce()
 
 
