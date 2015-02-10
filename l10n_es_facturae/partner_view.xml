@@ -35,8 +35,34 @@
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="dir3" placeholder="dir3 (administración pública)"/>
                 </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='Sales &amp; Purchases']/group/group/field[@name='supplier']"
+                       position="after">
+                    <field name="facturae"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                      <page string='Factura-e' attrs="{'invisible': [('facturae', '=', False)]}">
+                        <group>
+                            <field name="organo_gestor" attrs="{'required': [('facturae', '=', True)]}"/>
+                            <field name="unidad_tramitadora" attrs="{'required': [('facturae', '=', True)]}" />
+                            <field name="oficina_contable" attrs="{'required': [('facturae', '=', True)]}"/>
+                        </group>
+                      </page>
+                </xpath>
             </field>
         </record>
 
+
     </data>
 </openerp>
+
+
+
+
+
+
+
+
+
+
+
+
