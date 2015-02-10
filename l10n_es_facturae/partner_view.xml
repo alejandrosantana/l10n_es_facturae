@@ -40,7 +40,7 @@
                     <field name="facturae"/>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
-                      <page string='Factura-e' attrs="{'invisible': [('facturae', '=', False)]}">
+                      <page string='FACe' attrs="{'invisible': [('facturae', '=', False)]}">
                         <group>
                             <field name="organo_gestor" attrs="{'required': [('facturae', '=', True)]}"/>
                             <field name="unidad_tramitadora" attrs="{'required': [('facturae', '=', True)]}" />

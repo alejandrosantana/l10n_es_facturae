@@ -2,8 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com) All Rights Reserved.
-#                       Alejandro Sanchez <alejandro@asr-oss.com>
+#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com)
+#    All Rights Reserved.
+#    Alejandro Sanchez <alejandro@asr-oss.com>
 #    Copyright (c) 2015 Omar Castiñeira Saavedra (http://www.pexego.es)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -35,44 +36,64 @@ logger = netsvc.Logger()
 
 
 def conv_ascii(text):
-    """Convierte vocales accentuadas, ñ y ç a sus caracteres equivalentes ASCII"""
-    old_chars = ['á','é','í','ó','ú','à','è','ì','ò','ù','ä','ë','ï','ö','ü','â','ê','î','ô','û','Á','É','Í','Ú','Ó','À','È','Ì','Ò','Ù','Ä','Ë','Ï','Ö','Ü','Â','Ê','Î','Ô','Û','ñ','Ñ','ç','Ç','ª','º']
-    new_chars = ['a','e','i','o','u','a','e','i','o','u','a','e','i','o','u','a','e','i','o','u','A','E','I','O','U','A','E','I','O','U','A','E','I','O','U','A','E','I','O','U','n','N','c','C','a','o']
+    """
+       Convierte vocales accentuadas, ñ y ç a sus caracteres equivalentes ASCII
+    """
+    old_chars = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë',
+                 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'Á', 'É', 'Í', 'Ú',
+                 'Ó', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â',
+                 'Ê', 'Î', 'Ô', 'Û', 'ñ', 'Ñ', 'ç', 'Ç', 'ª', 'º']
+    new_chars = ['a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e',
+                 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O',
+                 'U', 'A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'A',
+                 'E', 'I', 'O', 'U', 'n', 'N', 'c', 'C', 'a', 'o']
     for old, new in zip(old_chars, new_chars):
-        text = text.replace(unicode(old,'UTF-8'), new)
+        text = text.replace(unicode(old, 'UTF-8'), new)
     return text
+
 
 class Log(Exception):
     def __init__(self):
         self.content = ""
         self.error = False
+
     def add(self, s, error=True):
         self.content = self.content + s
         if error:
             self.error = error
+
     def __call__(self):
         return self.content
+
     def __str__(self):
         return self.content
+
 
 class CreateFacturae(orm.TransientModel):
     _name = "create.facturae"
     _columns = {
-        'facturae' : fields.binary('Factura-E file', readonly=True),
+        'facturae': fields.binary('Factura-E file', readonly=True),
         'facturae_fname': fields.char("File name", size=64),
         'note': fields.text('Log'),
-        'state': fields.selection([('first', 'First'),('second','Second')], 'State', readonly=True)
+        'state': fields.selection([
+                                  ('first', 'First'),
+                                  ('second', 'Second')],
+                                  'State', readonly=True),
+        'firmar_facturae': fields.boolean('¿Desea firmar digitalmente el fichero generado?',
+                                          help='Requiere certificado en la ficha de la compañía')
     }
     _defaults = {
         'state': 'first'
     }
 
     def create_facturae_file(self, cr, uid, ids, context):
-
+        form = self.browse(cr, uid, ids)[0]
         def _format_xml():
-            #formato y definicion del fichero xml
+            # formato y definicion del fichero xml
             texto = '﻿<?xml version="1.0" encoding="UTF-8"?>'
-            texto = '<fe:Facturae xmlns:fe="http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
+            texto = '<fe:Facturae xmlns:fe=' \
+                    '"http://www.facturae.es/Facturae/2009/v3.2/Facturae" ' \
+                    'xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
             return texto
 
         def _persona(vat):
@@ -138,18 +159,19 @@ class CreateFacturae(orm.TransientModel):
             company_obj = invoice.company_id
             company_partner_obj = company_obj.partner_id
             invoice_partner_obj = invoice.partner_id
-            invoice_partner_address_obj = invoice.address_invoice_id
-            contact_partner_address_obj = invoice.address_contact_id
+            invoice_partner_address_obj = invoice.partner_id
+            contact_partner_address_obj = invoice.partner_id
 
-            #obtencion direccion company recogemos la de facura adress_get si no encuentra invoice devuelve primera
+            #obtencion direccion company recogemos la de factura adress_get si no encuentra invoice devuelve primera
             company_address_id = self.pool.get('res.partner').address_get(cr, uid, [company_obj.partner_id.id], ['invoice'])
             if not company_address_id['invoice']:
                 log.add(_('User error:\n\nCompany %s does not have an invoicing address.') % (company_partner_obj.name))
                 raise log
-            company_address_obj = self.pool.get('res.partner.address').browse(cr, uid, company_address_id['invoice'])
+
+            company_address_obj = self.pool.get('res.partner').browse(cr, uid, company_address_id['invoice'])
 
             #obtencion de la direccion del partner
-            partner_address_invoice = invoice.address_invoice_id
+            partner_address_invoice = invoice.partner_id
 
             tipo_seller = _persona(company_partner_obj.vat)
 
@@ -523,7 +545,7 @@ class CreateFacturae(orm.TransientModel):
         obj = self.browse(cr, uid, ids[0])
         invoice_ids = context.get('active_ids', [])
         if not invoice_ids or len(invoice_ids) > 1:
-            raise osv.except_osv(_('Error !'), _('Only can select one invoice to export'))
+            raise orm.except_osv(_('Error !'), _('Only can select one invoice to export'))
 
         try:
             invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_ids[0], context)
@@ -531,13 +553,17 @@ class CreateFacturae(orm.TransientModel):
             lines_issued = []
             xml_facturae += _format_xml()
             xml_facturae += _header_facturae(cr, context)
+            # juanjoa - el proceso _parties_facturae falla y redirige el flujo al except, REVISAR
             xml_facturae += _parties_facturae(cr, context)
             xml_facturae += _invoices_facturae()
             xml_facturae += _end_document()
             xml_facturae = conv_ascii(xml_facturae)
             # I.AFG
             file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
-            signed_invoice = _sign_document(xml_facturae,file_name,invoice)
+            print 'file_name: ', file_name
+            if form.firmar_facturae:
+                signed_invoice = _sign_document(xml_facturae,file_name,invoice)
+                print 'signed_invoice: ', signed_invoice
             #F.AFG
         except Log:
             obj.write({'note': log(),
@@ -545,6 +571,7 @@ class CreateFacturae(orm.TransientModel):
             return True
         else:
             file = base64.encodestring(signed_invoice)
+            print 'Else, file: ', file
             fname = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
             self.pool.get('ir.attachment').create(cr, uid, {
                 'name': '%s %s' % (_('FacturaE'), invoice.number),
