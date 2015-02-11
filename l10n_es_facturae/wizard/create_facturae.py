@@ -238,6 +238,7 @@ class CreateFacturae(orm.TransientModel):
             if company_address_obj.country_id.code_3166:
                 texto += '<CountryCode>' + company_address_obj.country_id.code_3166 + '</CountryCode>'
             else:
+                print 'Dirección: %s ' % company_address_obj.country_id
                 log.add(_('User error:\n\nCompany %s has no country.') % (company_partner_obj.name), True)
                 raise log
             texto += '</AddressInSpain>'
@@ -310,6 +311,7 @@ class CreateFacturae(orm.TransientModel):
                 if address.country_id.code_3166:
                     texto += '<CountryCode>' + address.country_id.code_3166 + '</CountryCode>'
                 else:
+                    print 'Dirección: %s ' % company_address_obj.country_id
                     log.add(_('User error:\n\nPartner %s has no country.') % (address.name), True)
                     raise log
                 texto += '</AddressInSpain>'
@@ -319,7 +321,7 @@ class CreateFacturae(orm.TransientModel):
                     texto += '<Telephone>' + address.phone + '</Telephone>'
                 if address.fax:
                     texto += '<TeleFax>' + address.fax + '</TeleFax>'
-                if address.partner_id.website:
+                if address.website:
                     texto += '<WebAddress>' + address.website + '</WebAddress>'
                 if address.email:
                     texto += '<ElectronicMail>' + address.email + '</ElectronicMail>'
@@ -389,7 +391,7 @@ class CreateFacturae(orm.TransientModel):
             texto += '<TaxTypeCode>01</TaxTypeCode>'
             texto += '<TaxRate>0.00</TaxRate>'
             texto += '<TaxableBase>'
-            texto += '<TotalAmount>' + str('%.2f' % taxes_withhel) + '</TotalAmount>'
+            texto += '<TotalAmount>0.00</TotalAmount>'
             texto += '</TaxableBase>'
             texto += '<TaxAmount>'
             texto += '<TotalAmount>0.00</TotalAmount>'
@@ -497,14 +499,14 @@ class CreateFacturae(orm.TransientModel):
 
         def _end_document():
             return '</fe:Facturae>'
-    
+
         def _run_java_sign(command):
             #call = [['java','-jar','temp.jar']]
             res = subprocess.call(command,stdout=None,stderr=None)
             if res > 0 :
                 print "Warning - result was %d" % res
             return res
-    
+
         def _sign_document(xml_facturae,file_name,invoice):
             path = os.path.realpath(os.path.dirname(__file__))
             path += '/../java/'
@@ -513,7 +515,7 @@ class CreateFacturae(orm.TransientModel):
             file_name_signed = path + file_name
             file_unsigned = open(file_name_unsigned,"w+")
             file_unsigned.write(xml_facturae)
-            file_unsigned.close()      
+            file_unsigned.close()
             file_signed = open(file_name_signed,"w+")
 
             # Extraemos los datos del certificado para la firma electrónica.
@@ -531,7 +533,7 @@ class CreateFacturae(orm.TransientModel):
             call += [cert_path,cert_passwd]
             res = _run_java_sign(call)
 
-            # Cerramos y eliminamos ficheros temporales.           
+            # Cerramos y eliminamos ficheros temporales.
             file_content = file_signed.read()
             file_signed.close()
             os.remove(file_name_unsigned)
@@ -547,44 +549,34 @@ class CreateFacturae(orm.TransientModel):
         if not invoice_ids or len(invoice_ids) > 1:
             raise orm.except_osv(_('Error !'), _('Only can select one invoice to export'))
 
-        try:
-            invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_ids[0], context)
-            contador = 1
-            lines_issued = []
-            xml_facturae += _format_xml()
-            xml_facturae += _header_facturae(cr, context)
-            # juanjoa - el proceso _parties_facturae falla y redirige el flujo al except, REVISAR
-            xml_facturae += _parties_facturae(cr, context)
-            xml_facturae += _invoices_facturae()
-            xml_facturae += _end_document()
-            xml_facturae = conv_ascii(xml_facturae)
-            # I.AFG
-            file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
-            print 'file_name: ', file_name
-            if form.firmar_facturae:
-                signed_invoice = _sign_document(xml_facturae,file_name,invoice)
-                print 'signed_invoice: ', signed_invoice
-            #F.AFG
-        except Log:
-            obj.write({'note': log(),
-                       'state': 'second'})
-            return True
+        invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_ids[0], context)
+        contador = 1
+        lines_issued = []
+        xml_facturae += _format_xml()
+        xml_facturae += _header_facturae(cr, context)
+        xml_facturae += _parties_facturae(cr, context)
+        xml_facturae += _invoices_facturae()
+        xml_facturae += _end_document()
+        xml_facturae = conv_ascii(xml_facturae)
+        if invoice.company_id.facturae_cert:
+            invoice_file = _sign_document(xml_facturae, file_name, invoice)
+            file_name = (_('facturae') + '_' + invoice.number + '.xsig').replace('/', '-')
         else:
-            file = base64.encodestring(signed_invoice)
-            print 'Else, file: ', file
-            fname = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
-            self.pool.get('ir.attachment').create(cr, uid, {
-                'name': '%s %s' % (_('FacturaE'), invoice.number),
-                'datas': file,
-                'datas_fname': fname,
-                'res_model': 'account.invoice',
-                'res_id': invoice.id,
-                }, context=context)
-            log.add(_("Export successful\n\nSummary:\nInvoice number: %s\n") % (invoice.number))
+            invoice_file = xml_facturae
+            file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/', '-')
 
-            obj.write({'note': log(),
-                       'facturae': file,
-                       'facturae_fname': fname,
-                       'state': 'second'})
-            return True
+        file = base64.encodestring(invoice_file)
+        self.pool.get('ir.attachment').create(cr, uid, {
+            'name': file_name,
+            'datas': file,
+            'datas_fname': file_name,
+            'res_model': 'account.invoice',
+            'res_id': invoice.id,
+            }, context=context)
+        log.add(_("Export successful\n\nSummary:\nInvoice number: %s\n") % (invoice.number))
 
+        obj.write({'note': log(),
+                   'facturae': file,
+                   'facturae_fname': file_name,
+                   'state': 'second'})
+        return True
