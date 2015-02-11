@@ -494,7 +494,7 @@ class create_facturae(osv.osv_memory):
             file_name_unsigned = path + 'unsigned_' + file_name
             file_name_signed = path + file_name
             file_unsigned = open(file_name_unsigned,"w+")
-            file_unsigned.write(xml_facturae)
+            file_unsigned.write(xml_facturae.encode('ascii', 'replace'))
             file_unsigned.close()
             file_signed = open(file_name_signed,"w+")
 
@@ -539,8 +539,8 @@ class create_facturae(osv.osv_memory):
         xml_facturae += _end_document()
         xml_facturae = conv_ascii(xml_facturae)
         if invoice.company_id.facturae_cert:
-            invoice_file = _sign_document(xml_facturae,file_name,invoice)
             file_name = (_('facturae') + '_' + invoice.number + '.xsig').replace('/','-')
+            invoice_file = _sign_document(xml_facturae,file_name,invoice)
         else:
             invoice_file = xml_facturae
             file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
