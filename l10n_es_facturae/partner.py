@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import orm, fields
 
-class res_partner_address(osv.osv):
 
-    _inherit = "res.partner.address"
-
+class ResPartner(orm.Model):
+    _inherit = "res.partner"
     _columns = {
         'dir3': fields.char('DIR3', size=10, help="Field required for Face facturae format"),
+        'facturae': fields.boolean('Factura electrónica'),
+        'organo_gestor': fields.char(size=100, string='Órgano gestor'),
+        'unidad_tramitadora': fields.char(size=100, string='Unidad tramitadora'),
+        'oficina_contable': fields.char(size=100, string='Oficina contable'),
     }
-
-res_partner_address()

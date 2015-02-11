@@ -7,17 +7,19 @@
             <field name="model">create.facturae</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create Factura-E">
-                    <label string="Do you want to Create Factura-E?" colspan="4"/>
-                    <field name="state" invisible="1"/>
+                <form string="Crear Factura-E">
+                    <label string="Este proceso creará la factura electrónica" colspan="4"/>
+                    <!-- <field name="state" invisible="1"/> -->
+                    <field name="state" invisible="0"/>
+                    <field name="firmar_facturae" />
                     <group attrs="{'invisible': [('state', '=', 'first')]}" colspan="4">
                         <field name="facturae" filename="facturae_fname"/>
                         <field name="facturae_fname" invisible="1"/>
                         <field name="note" colspan="4" nolabel="1"/>
                     </group>
                     <group colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button icon="gtk-print" name="create_facturae_file" string="Export" type="object" states="first"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cerrar"/>
+                        <button icon="gtk-print" name="create_facturae_file" string="Exportar" type="object" states="first"/>
                     </group>
                 </form>
             </field>

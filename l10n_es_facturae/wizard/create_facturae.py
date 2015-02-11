@@ -2,8 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com) All Rights Reserved.
-#                       Alejandro Sanchez <alejandro@asr-oss.com>
+#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com)
+#    All Rights Reserved.
+#    Alejandro Sanchez <alejandro@asr-oss.com>
 #    Copyright (c) 2015 Omar Castiñeira Saavedra (http://www.pexego.es)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -24,9 +25,8 @@
 import base64
 import netsvc
 from tools.translate import _
-from osv import osv, fields
+from osv import orm, fields
 import pooler
-import wizard
 import base64
 import subprocess
 import os
@@ -36,47 +36,64 @@ logger = netsvc.Logger()
 
 
 def conv_ascii(text):
-    """Convierte vocales accentuadas, ñ y ç a sus caracteres equivalentes ASCII"""
-    old_chars = ['á','é','í','ó','ú','à','è','ì','ò','ù','ä','ë','ï','ö','ü','â','ê','î','ô','û','Á','É','Í','Ú','Ó','À','È','Ì','Ò','Ù','Ä','Ë','Ï','Ö','Ü','Â','Ê','Î','Ô','Û','ñ','Ñ','ç','Ç','ª','º']
-    new_chars = ['a','e','i','o','u','a','e','i','o','u','a','e','i','o','u','a','e','i','o','u','A','E','I','O','U','A','E','I','O','U','A','E','I','O','U','A','E','I','O','U','n','N','c','C','a','o']
+    """
+       Convierte vocales accentuadas, ñ y ç a sus caracteres equivalentes ASCII
+    """
+    old_chars = ['á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë',
+                 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'Á', 'É', 'Í', 'Ú',
+                 'Ó', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â',
+                 'Ê', 'Î', 'Ô', 'Û', 'ñ', 'Ñ', 'ç', 'Ç', 'ª', 'º']
+    new_chars = ['a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e',
+                 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O',
+                 'U', 'A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'A',
+                 'E', 'I', 'O', 'U', 'n', 'N', 'c', 'C', 'a', 'o']
     for old, new in zip(old_chars, new_chars):
-        text = text.replace(unicode(old,'UTF-8'), new)
+        text = text.replace(unicode(old, 'UTF-8'), new)
     return text
+
 
 class Log(Exception):
     def __init__(self):
         self.content = ""
         self.error = False
+
     def add(self, s, error=True):
         self.content = self.content + s
         if error:
             self.error = error
+
     def __call__(self):
         return self.content
+
     def __str__(self):
         return self.content
 
-class create_facturae(osv.osv_memory):
 
+class CreateFacturae(orm.TransientModel):
     _name = "create.facturae"
-
     _columns = {
-        'facturae' : fields.binary('Factura-E file', readonly=True),
+        'facturae': fields.binary('Factura-E file', readonly=True),
         'facturae_fname': fields.char("File name", size=64),
         'note': fields.text('Log'),
-        'state': fields.selection([('first', 'First'),('second','Second')], 'State', readonly=True)
+        'state': fields.selection([
+                                  ('first', 'First'),
+                                  ('second', 'Second')],
+                                  'State', readonly=True),
+        'firmar_facturae': fields.boolean('¿Desea firmar digitalmente el fichero generado?',
+                                          help='Requiere certificado en la ficha de la compañía')
     }
-
     _defaults = {
         'state': 'first'
     }
 
     def create_facturae_file(self, cr, uid, ids, context):
-
+        form = self.browse(cr, uid, ids)[0]
         def _format_xml():
-            #formato y definicion del fichero xml
+            # formato y definicion del fichero xml
             texto = '﻿<?xml version="1.0" encoding="UTF-8"?>'
-            texto = '<fe:Facturae xmlns:fe="http://www.facturae.es/Facturae/2009/v3.2/Facturae" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
+            texto = '<fe:Facturae xmlns:fe=' \
+                    '"http://www.facturae.es/Facturae/2009/v3.2/Facturae" ' \
+                    'xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
             return texto
 
         def _persona(vat):
@@ -142,18 +159,19 @@ class create_facturae(osv.osv_memory):
             company_obj = invoice.company_id
             company_partner_obj = company_obj.partner_id
             invoice_partner_obj = invoice.partner_id
-            invoice_partner_address_obj = invoice.address_invoice_id
-            contact_partner_address_obj = invoice.address_contact_id
+            invoice_partner_address_obj = invoice.partner_id
+            contact_partner_address_obj = invoice.partner_id
 
-            #obtencion direccion company recogemos la de facura adress_get si no encuentra invoice devuelve primera
+            #obtencion direccion company recogemos la de factura adress_get si no encuentra invoice devuelve primera
             company_address_id = self.pool.get('res.partner').address_get(cr, uid, [company_obj.partner_id.id], ['invoice'])
             if not company_address_id['invoice']:
                 log.add(_('User error:\n\nCompany %s does not have an invoicing address.') % (company_partner_obj.name))
                 raise log
-            company_address_obj = self.pool.get('res.partner.address').browse(cr, uid, company_address_id['invoice'])
+
+            company_address_obj = self.pool.get('res.partner').browse(cr, uid, company_address_id['invoice'])
 
             #obtencion de la direccion del partner
-            partner_address_invoice = invoice.address_invoice_id
+            partner_address_invoice = invoice.partner_id
 
             tipo_seller = _persona(company_partner_obj.vat)
 
@@ -220,6 +238,7 @@ class create_facturae(osv.osv_memory):
             if company_address_obj.country_id.code_3166:
                 texto += '<CountryCode>' + company_address_obj.country_id.code_3166 + '</CountryCode>'
             else:
+                print 'Dirección: %s ' % company_address_obj.country_id
                 log.add(_('User error:\n\nCompany %s has no country.') % (company_partner_obj.name), True)
                 raise log
             texto += '</AddressInSpain>'
@@ -292,6 +311,7 @@ class create_facturae(osv.osv_memory):
                 if address.country_id.code_3166:
                     texto += '<CountryCode>' + address.country_id.code_3166 + '</CountryCode>'
                 else:
+                    print 'Dirección: %s ' % company_address_obj.country_id
                     log.add(_('User error:\n\nPartner %s has no country.') % (address.name), True)
                     raise log
                 texto += '</AddressInSpain>'
@@ -301,7 +321,7 @@ class create_facturae(osv.osv_memory):
                     texto += '<Telephone>' + address.phone + '</Telephone>'
                 if address.fax:
                     texto += '<TeleFax>' + address.fax + '</TeleFax>'
-                if address.partner_id.website:
+                if address.website:
                     texto += '<WebAddress>' + address.website + '</WebAddress>'
                 if address.email:
                     texto += '<ElectronicMail>' + address.email + '</ElectronicMail>'
@@ -371,7 +391,7 @@ class create_facturae(osv.osv_memory):
             texto += '<TaxTypeCode>01</TaxTypeCode>'
             texto += '<TaxRate>0.00</TaxRate>'
             texto += '<TaxableBase>'
-            texto += '<TotalAmount>' + str('%.2f' % taxes_withhel) + '</TotalAmount>'
+            texto += '<TotalAmount>0.00</TotalAmount>'
             texto += '</TaxableBase>'
             texto += '<TaxAmount>'
             texto += '<TotalAmount>0.00</TotalAmount>'
@@ -479,14 +499,14 @@ class create_facturae(osv.osv_memory):
 
         def _end_document():
             return '</fe:Facturae>'
-    
+
         def _run_java_sign(command):
             #call = [['java','-jar','temp.jar']]
             res = subprocess.call(command,stdout=None,stderr=None)
             if res > 0 :
                 print "Warning - result was %d" % res
             return res
-    
+
         def _sign_document(xml_facturae,file_name,invoice):
             path = os.path.realpath(os.path.dirname(__file__))
             path += '/../java/'
@@ -495,7 +515,7 @@ class create_facturae(osv.osv_memory):
             file_name_signed = path + file_name
             file_unsigned = open(file_name_unsigned,"w+")
             file_unsigned.write(xml_facturae)
-            file_unsigned.close()      
+            file_unsigned.close()
             file_signed = open(file_name_signed,"w+")
 
             # Extraemos los datos del certificado para la firma electrónica.
@@ -513,7 +533,7 @@ class create_facturae(osv.osv_memory):
             call += [cert_path,cert_passwd]
             res = _run_java_sign(call)
 
-            # Cerramos y eliminamos ficheros temporales.           
+            # Cerramos y eliminamos ficheros temporales.
             file_content = file_signed.read()
             file_signed.close()
             os.remove(file_name_unsigned)
@@ -527,43 +547,36 @@ class create_facturae(osv.osv_memory):
         obj = self.browse(cr, uid, ids[0])
         invoice_ids = context.get('active_ids', [])
         if not invoice_ids or len(invoice_ids) > 1:
-            raise osv.except_osv(_('Error !'), _('Only can select one invoice to export'))
+            raise orm.except_osv(_('Error !'), _('Only can select one invoice to export'))
 
-        try:
-            invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_ids[0], context)
-            contador = 1
-            lines_issued = []
-            xml_facturae += _format_xml()
-            xml_facturae += _header_facturae(cr, context)
-            xml_facturae += _parties_facturae(cr, context)
-            xml_facturae += _invoices_facturae()
-            xml_facturae += _end_document()
-            xml_facturae = conv_ascii(xml_facturae)
-            # I.AFG
-            file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
-            signed_invoice = _sign_document(xml_facturae,file_name,invoice)
-            #F.AFG
-        except Log:
-            obj.write({'note': log(),
-                       'state': 'second'})
-            return True
+        invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_ids[0], context)
+        contador = 1
+        lines_issued = []
+        xml_facturae += _format_xml()
+        xml_facturae += _header_facturae(cr, context)
+        xml_facturae += _parties_facturae(cr, context)
+        xml_facturae += _invoices_facturae()
+        xml_facturae += _end_document()
+        xml_facturae = conv_ascii(xml_facturae)
+        if invoice.company_id.facturae_cert:
+            invoice_file = _sign_document(xml_facturae, file_name, invoice)
+            file_name = (_('facturae') + '_' + invoice.number + '.xsig').replace('/', '-')
         else:
-            file = base64.encodestring(signed_invoice)
-            fname = (_('facturae') + '_' + invoice.number + '.xml').replace('/','-')
-            self.pool.get('ir.attachment').create(cr, uid, {
-                'name': '%s %s' % (_('FacturaE'), invoice.number),
-                'datas': file,
-                'datas_fname': fname,
-                'res_model': 'account.invoice',
-                'res_id': invoice.id,
-                }, context=context)
-            log.add(_("Export successful\n\nSummary:\nInvoice number: %s\n") % (invoice.number))
+            invoice_file = xml_facturae
+            file_name = (_('facturae') + '_' + invoice.number + '.xml').replace('/', '-')
 
-            obj.write({'note': log(),
-                       'facturae': file,
-                       'facturae_fname': fname,
-                       'state': 'second'})
-            return True
+        file = base64.encodestring(invoice_file)
+        self.pool.get('ir.attachment').create(cr, uid, {
+            'name': file_name,
+            'datas': file,
+            'datas_fname': file_name,
+            'res_model': 'account.invoice',
+            'res_id': invoice.id,
+            }, context=context)
+        log.add(_("Export successful\n\nSummary:\nInvoice number: %s\n") % (invoice.number))
 
-
-create_facturae()
+        obj.write({'note': log(),
+                   'facturae': file,
+                   'facturae_fname': file_name,
+                   'state': 'second'})
+        return True

@@ -2,7 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com) All Rights Reserved.
+#    Copyright (c) 2009 Alejandro Sanchez (http://www.asr-oss.com)
+#    All Rights Reserved.
 #                       Alejandro Sanchez <alejandro@asr-oss.com>
 #    $Id$
 #
