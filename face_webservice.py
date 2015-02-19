@@ -9,7 +9,7 @@ imp = Import('http://schemas.xmlsoap.org/soap/encoding/', 'http://schemas.xmlsoa
 imp.filter.add(tns)
 
 client = Client(url,plugins=[ImportDoctor(imp)])
-# print client
+print client
 
 result = client.service.consultarAdministraciones()
 print result

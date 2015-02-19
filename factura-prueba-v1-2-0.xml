@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fe:Facturae xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:fe="http://www.facturae.es/Facturae/2009/v3.2/Facturae">
+<FileHeader>
+	<SchemaVersion>3.2</SchemaVersion>
+	<Modality>I</Modality>
+	<InvoiceIssuerType>EM</InvoiceIssuerType>
+	<Batch>
+		<BatchIdentifier>B1234567422FC</BatchIdentifier>
+		<InvoicesCount>1</InvoicesCount>
+		<TotalInvoicesAmount><TotalAmount>1384.58</TotalAmount></TotalInvoicesAmount>
+		<TotalOutstandingAmount><TotalAmount>1384.58</TotalAmount></TotalOutstandingAmount>
+		<TotalExecutableAmount><TotalAmount>1384.58</TotalAmount></TotalExecutableAmount>
+		<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+	</Batch>
+</FileHeader>
+<Parties>
+	<SellerParty>
+		<TaxIdentification>
+			<PersonTypeCode>F</PersonTypeCode>
+			<ResidenceTypeCode>R</ResidenceTypeCode>
+			<TaxIdentificationNumber>12345678Z</TaxIdentificationNumber>
+		</TaxIdentification>
+		<Individual>
+			<Name>Emisor</Name>
+			<FirstSurname>primer_apellido_E</FirstSurname>
+			<SecondSurname>segundo_apellido_E</SecondSurname>
+			<AddressInSpain>
+				<Address>direccion_E</Address>
+				<PostCode>18230</PostCode>
+				<Town>problacion_E</Town>
+				<Province>provincia_E</Province>
+				<CountryCode>ESP</CountryCode>
+			</AddressInSpain>
+		</Individual>
+	</SellerParty>
+	<BuyerParty>
+		<TaxIdentification>
+			<PersonTypeCode>J</PersonTypeCode>
+			<ResidenceTypeCode>R</ResidenceTypeCode>
+			<TaxIdentificationNumber>B12345674</TaxIdentificationNumber>
+		</TaxIdentification>
+		<AdministrativeCentres>
+			<AdministrativeCentre>
+				<CentreCode>P00000010</CentreCode>
+				<RoleTypeCode>03</RoleTypeCode>
+				<Name>nombre_UT</Name>
+				<FirstSurname>primer_apellido_U</FirstSurname>
+				<SecondSurname>segundo_Apellido_U</SecondSurname>
+				<AddressInSpain><Address>direccion_U</Address><PostCode>18230</PostCode><Town>poblacion_U</Town><Province>provincia_U</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+				<CentreDescription>Unidad tramitacion</CentreDescription>
+			</AdministrativeCentre>
+			<AdministrativeCentre>
+				<CentreCode>P00000010</CentreCode>
+				<RoleTypeCode>02</RoleTypeCode>
+				<Name>nombre_OG</Name>
+				<FirstSurname>primer_apellido_OG</FirstSurname>
+				<SecondSurname>segundo_apellido_OG</SecondSurname>
+				<AddressInSpain><Address>direccion_OG</Address><PostCode>18230</PostCode><Town>poblacion_OG</Town><Province>provincia_OG</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+				<CentreDescription>Descripcion Organo Gestor</CentreDescription>
+			</AdministrativeCentre>
+			<AdministrativeCentre>
+				<CentreCode>P00000010</CentreCode>
+				<RoleTypeCode>01</RoleTypeCode>
+				<Name>nombre_OC</Name>
+				<FirstSurname>primer_apellido_OC</FirstSurname>
+				<SecondSurname>segundo_apellido_OC</SecondSurname>
+				<AddressInSpain><Address>direccion_OC</Address><PostCode>18230</PostCode><Town>poblacion_OC</Town><Province>provincia_OC</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+				<CentreDescription>Descripcion Oficina Contable</CentreDescription>
+			</AdministrativeCentre>
+		</AdministrativeCentres>
+		<LegalEntity>
+			<CorporateName>receptor</CorporateName>
+			<TradeName>nombre_comercial_R</TradeName>
+			<AddressInSpain><Address>direccion_R</Address><PostCode>18230</PostCode><Town>poblacion_R</Town><Province>provincia_R</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+		</LegalEntity>
+	</BuyerParty>
+</Parties>
+<Invoices>
+	<Invoice>
+		<InvoiceHeader>
+			<InvoiceNumber>2</InvoiceNumber>
+			<InvoiceSeriesCode>PACOP</InvoiceSeriesCode>
+			<InvoiceDocumentType>FC</InvoiceDocumentType>
+			<InvoiceClass>OO</InvoiceClass>
+		</InvoiceHeader>
+		<InvoiceIssueData>
+			<IssueDate>2013-01-17</IssueDate>
+			<InvoicingPeriod>
+				<StartDate>2013-01-17</StartDate>
+				<EndDate>2013-01-17</EndDate>
+			</InvoicingPeriod>
+			<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+			<TaxCurrencyCode>EUR</TaxCurrencyCode>
+			<LanguageName>es</LanguageName>
+		</InvoiceIssueData>
+		<TaxesOutputs>
+			<Tax>
+				<TaxTypeCode>02</TaxTypeCode>
+				<TaxRate>3.00</TaxRate>
+				<TaxableBase><TotalAmount>1163.52</TotalAmount></TaxableBase>
+				<TaxAmount><TotalAmount>34.91</TotalAmount></TaxAmount>
+				<EquivalenceSurcharge>3.00</EquivalenceSurcharge>
+				<EquivalenceSurchargeAmount><TotalAmount>34.91</TotalAmount></EquivalenceSurchargeAmount>
+			</Tax>
+			<Tax>
+				<TaxTypeCode>01</TaxTypeCode>
+				<TaxRate>18.00</TaxRate>
+				<TaxableBase><TotalAmount>1163.52</TotalAmount></TaxableBase>
+				<TaxAmount><TotalAmount>209.43</TotalAmount></TaxAmount>
+			</Tax>
+		</TaxesOutputs>
+		<TaxesWithheld>
+			<Tax>
+				<TaxTypeCode>03</TaxTypeCode>
+				<TaxRate>5.00</TaxRate>
+				<TaxableBase><TotalAmount>1163.52</TotalAmount></TaxableBase>
+				<TaxAmount><TotalAmount>58.18</TotalAmount></TaxAmount>
+			</Tax>
+		</TaxesWithheld>
+		<InvoiceTotals>
+			<TotalGrossAmount>1212.00</TotalGrossAmount>
+			<GeneralDiscounts>
+				<Discount>
+					<DiscountReason>descuento_general</DiscountReason>
+					<DiscountRate>4.0000</DiscountRate>
+					<DiscountAmount>48.480000</DiscountAmount>
+				</Discount>
+			</GeneralDiscounts>
+			<TotalGeneralDiscounts>48.48</TotalGeneralDiscounts>
+			<TotalGeneralSurcharges>0.00</TotalGeneralSurcharges>
+			<TotalGrossAmountBeforeTaxes>1163.52</TotalGrossAmountBeforeTaxes>
+			<TotalTaxOutputs>279.24</TotalTaxOutputs>
+			<TotalTaxesWithheld>58.18</TotalTaxesWithheld>
+			<InvoiceTotal>1384.58</InvoiceTotal>
+			<TotalOutstandingAmount>1384.58</TotalOutstandingAmount>
+			<TotalExecutableAmount>1384.58</TotalExecutableAmount>
+		</InvoiceTotals>
+		<Items>
+			<InvoiceLine>
+				<ItemDescription>Descripcion de factura de mesas</ItemDescription>
+				<Quantity>4.0</Quantity>
+				<UnitOfMeasure>01</UnitOfMeasure>
+				<UnitPriceWithoutTax>300.000000</UnitPriceWithoutTax>
+				<TotalCost>1200.000000</TotalCost>
+				<DiscountsAndRebates>
+					<Discount>
+						<DiscountReason>descuento </DiscountReason>
+						<DiscountRate>3.0000</DiscountRate>
+						<DiscountAmount>36.000000</DiscountAmount>
+					</Discount>
+				</DiscountsAndRebates>
+				<Charges>
+					<Charge>
+						<ChargeReason>cargo</ChargeReason>
+						<ChargeRate>4.0000</ChargeRate>
+						<ChargeAmount>48.000000</ChargeAmount>
+					</Charge>
+				</Charges>
+				<GrossAmount>1212.000000</GrossAmount>
+				<TaxesWithheld>
+					<Tax>
+						<TaxTypeCode>03</TaxTypeCode>
+						<TaxRate>5.00</TaxRate>
+						<TaxableBase><TotalAmount>1212.00</TotalAmount></TaxableBase>
+						<TaxAmount><TotalAmount>60.60</TotalAmount></TaxAmount>
+					</Tax>
+				</TaxesWithheld>
+				<TaxesOutputs>
+					<Tax>
+						<TaxTypeCode>01</TaxTypeCode>
+						<TaxRate>18.00</TaxRate>
+						<TaxableBase><TotalAmount>1212.00</TotalAmount></TaxableBase>
+						<TaxAmount><TotalAmount>218.16</TotalAmount></TaxAmount>
+						<EquivalenceSurcharge>0.00</EquivalenceSurcharge>
+						<EquivalenceSurchargeAmount><TotalAmount>0.00</TotalAmount></EquivalenceSurchargeAmount>
+					</Tax>
+					<Tax>
+						<TaxTypeCode>02</TaxTypeCode>
+						<TaxRate>3.00</TaxRate>
+						<TaxableBase><TotalAmount>1212.00</TotalAmount></TaxableBase>
+						<TaxAmount><TotalAmount>36.36</TotalAmount></TaxAmount>
+						<EquivalenceSurcharge>3.00</EquivalenceSurcharge>
+						<EquivalenceSurchargeAmount><TotalAmount>36.36</TotalAmount></EquivalenceSurchargeAmount>
+					</Tax>
+				</TaxesOutputs>
+				<AdditionalLineItemInformation>Informacion adicional de la factura de la mesas</AdditionalLineItemInformation>
+			</InvoiceLine>
+		</Items>
+	</Invoice>
+</Invoices>
+<ds:Signature Id="Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-Signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference Id="Reference-e7345c22-22ce-4c13-8508-58ab60b76d54" URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>T76o15TBCKeIXrmOwepu7oq7y5o=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-SignedProperties"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>5L0d+vvHIVtB9C2bk2LGaVPz9WA=</ds:DigestValue></ds:Reference><ds:Reference URI="#Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-KeyInfo"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>7c1fCSUEl8DHBE7zeckSq9C4VdA=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-SignatureValue">U51SJrUvnYRsZW/P2nanc6kFgwHxgB2/iNFtjBWfHrVijeBfTmp5NAqxrAiiCdEPBVz8hQ7IP+Eh
+OiJ+TSHO7K5BPqZezutEzaX4Dk0VPxmcoZUOlmyH9GSvuV4UxjeYBPjbtLTunXjRyUsBgSUDE597
+KRHPWjCMpzVEAh6sOIg=</ds:SignatureValue><ds:KeyInfo Id="Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-KeyInfo"><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>kUoucvy6dGg0D9AOgE2vfqc9WVAPvsDzI8VIv2tpN7ChMlaPwiCv5jvNE8X4JggMy0KmQ8bEqA7l
+4UD3St7NNMRiPaYu1SuipNP0wd+aNnk1yb8LO9OrF6cWN+Oui3EqD09zrM7FM5jCzTC6AmMDF3VU
+UwT04MsC/gJSXqnHas0=</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue><ds:X509Data><ds:X509Certificate>MIIHSzCCBjOgAwIBAgIQZZ01f28FrzhRFOaSOTtbsDANBgkqhkiG9w0BAQUFADCB1jELMAkGA1UE
+BhMCRVMxDzANBgNVBAcTBk1hZHJpZDEgMB4GCSqGSIb3DQEJARYRYWNAYWNhYm9nYWNpYS5vcmcx
+NjA0BgNVBAoTLUNvbnNlam8gR2VuZXJhbCBkZSBsYSBBYm9nYWNpYSBOSUY6US0yODYzMDA2STEy
+MDAGA1UECxMpQXV0b3JpZGFkIGRlIENlcnRpZmljYWNpb24gZGUgbGEgQWJvZ2FjaWExKDAmBgNV
+BAMTH0FDQSAtIENlcnRpZmljYWRvcyBDb3Jwb3JhdGl2b3MwHhcNMTMwMjA4MTE1MDAwWhcNMTYw
+MjA4MTE1MDAwWjCCAV0xGDAWBgorBgEEAYGBFR4BEwhFTVBMRUFETzERMA8GA1UEBBMIRU1QTEVB
+RE8xDTALBgNVBCoTBERFTU8xEjAQBgNVBAUTCTA4OTY3NDI1UjEZMBcGCisGAQQBpGYBAwITCVEy
+ODYzMDA2STERMA8GA1UEDBMIUGVyc29uYWwxDzANBgNVBAgTBk1hZHJpZDELMAkGA1UEBhMCRVMx
+PjA8BgNVBAoTNUNvbnNlam8gR2VuZXJhbCBkZSBsYSBBYm9nYWPtYSBFc3Bh8W9sYSAvIENHQUUg
+LyAyMDAwMRQwEgYDVQQLEwtJbmZvcm1hdGljYTE2MDQGA1UEAxMtTk9NQlJFIEVNUExFQURPIEVN
+UExFQURPIERFTU8gLSBOSUYgMDg5Njc0MjVSMTEwLwYJKoZIhvcNAQkBFiJkZW1vLmVtcGxlYWRv
+QGNnYWUucmVkYWJvZ2FjaWEub3JnMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRSi5y/Lp0
+aDQP0A6ATa9+pz1ZUA++wPMjxUi/a2k3sKEyVo/CIK/mO80TxfgmCAzLQqZDxsSoDuXhQPdK3s00
+xGI9pi7VK6Kk0/TB35o2eTXJvws706sXpxY3466LcSoPT3OszsUzmMLNMLoCYwMXdVRTBPTgywL+
+AlJeqcdqzQIDAQABo4IDDTCCAwkwNwYDVR0SBDAwLoERYWNAYWNhYm9nYWNpYS5vcmeGGWh0dHA6
+Ly93d3cuYWNhYm9nYWNpYS5vcmcwDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCA/gwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBEGCWCGSAGG+EIBAQQEAwIFoDAsBglghkgBhvhCAQgE
+HxYdaHR0cDovL3d3dy5hY2Fib2dhY2lhLm9yZy9kb2MwYQYJYIZIAYb4QgENBFQWUkVzdGUgZXMg
+dW4gY2VydGlmaWNhZG8gcGVyc29uYWwgcmVjb25vY2lkby4gQ29uc3VsdGUgaHR0cDovL3d3dy5h
+Y2Fib2dhY2lhLm9yZy9kb2MwHQYDVR0OBBYEFHjbov9sq5WJeBXc2sjRfHD/w6BZMB8GA1UdIwQY
+MBaAFFp5TKEM/AgWLMKFRU8yq+crRcARMIGsBgNVHSAEgaQwgaEwgZ4GCysGAQQBgYEVCgMBMIGO
+MCkGCCsGAQUFBwIBFh1odHRwOi8vd3d3LmFjYWJvZ2FjaWEub3JnL2RvYzBhBggrBgEFBQcCAjBV
+GlNFc3RlIGVzIHVuIGNlcnRpZmljYWRvIHBlcnNvbmFsIHJlY29ub2NpZG8uIENvbnN1bHRlICBo
+dHRwOi8vd3d3LmFjYWJvZ2FjaWEub3JnL2RvYzBWBggrBgEFBQcBAQRKMEgwRgYIKwYBBQUHMAKG
+Omh0dHA6Ly93d3cuYWNhYm9nYWNpYS5vcmcvY2VydGlmaWNhZG9zL0FDQWNvcnBvcmF0aXZvcy5j
+cnQwLwYIKwYBBQUHAQMEIzAhMAgGBgQAjkYBATAVBgYEAI5GAQIwCxMDRVVSAgEGAgEEMHUGA1Ud
+HwRuMGwwaqBooGaGMWh0dHA6Ly93d3cuYWNhYm9nYWNpYS5vcmcvY3JsL0FDQWNvcnBvcmF0aXZv
+cy5jcmyGMWh0dHA6Ly9jcmwuYWNhYm9nYWNpYS5vcmcvY3JsL0FDQWNvcnBvcmF0aXZvcy5jcmww
+DQYJKoZIhvcNAQEFBQADggEBAJw2PUo7XhdouRj6LP+8tp/Pk7ca5s3mJOUquxVkfkJr5QIajfzJ
+5eqmCOHwrpGfjaiJD4xdsMXhQmv0z7tff0uiCJwBR59JvqKY2id32o8nfWF5IHoFfm+hBuscFHvc
+a60SlazohM3R4U12lx0FR/wji1l08cg10uHXQxK/1vqma8A5hGtSqTz4vdiyAkrq7Tkn9tRqOCOj
+e0Uebz069Fh2eDqBe/4+sufHfY+Y+JnBYQvN4Xmj6MJDG4mmDL8GB2KJ9groxwJt/BgAqdKEkk9R
+SEQEo5mAkDg07dCrGrUwXFK4Bc6+8rwaazTHXbRy4wVTaSkgC0e1nOhucw10PVk=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties Id="Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-QualifyingProperties" Target="#Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-Signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"><xades:SignedProperties Id="Signature-ca7ecf54-42ec-46d2-8aa3-92eb94d9e03c-SignedProperties"><xades:SignedSignatureProperties><xades:SigningTime>2014-04-28T17:37:24+02:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>iWl4dVJq2wGblUJjGeMAnmBeHe8=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=ACA - Certificados Corporativos, OU=Autoridad de Certificacion de la Abogacia, O=Consejo General de la Abogacia NIF:Q-2863006I, EMAILADDRESS=ac@acabogacia.org, L=Madrid, C=ES</ds:X509IssuerName><ds:X509SerialNumber>135068303245111812123329238818679905200</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:SignerRole><xades:ClaimedRoles><xades:ClaimedRole>emisor</xades:ClaimedRole></xades:ClaimedRoles></xades:SignerRole><xades:SignaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier><xades:Description>facturae31</xades:Description></xades:SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue></xades:SigPolicyHash></xades:SignaturePolicyId></xades:SignaturePolicyIdentifier></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#Reference-e7345c22-22ce-4c13-8508-58ab60b76d54"><xades:Description/><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></fe:Facturae>

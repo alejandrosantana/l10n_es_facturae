@@ -54,3 +54,11 @@ docs/_build/
 # Backup files
 *~
 *.swp
+
+# Keys, certificates
+*.p12
+*.cert
+*.pem
+*.crt
+*.csr
+*.key
